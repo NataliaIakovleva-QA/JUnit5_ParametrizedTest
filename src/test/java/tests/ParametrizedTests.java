@@ -23,22 +23,21 @@ public class ParametrizedTests extends TestBase {
     @Tag("SMOKE")
     @ParameterizedTest(name = "Проверка заголовка на соответствующем языке {0}")
     void checkTitleOnAppropriateLanguageTest(Language language) {
-        open("/");
-        $(".language-dropdown").click();
-        $(".language-dropdown-item").$(byText(language.name())).click();
-        $(".search-form-title").shouldHave(text(language.description));
+        open("/" + language.urlSuffix + "/ueber-uns/botschaft");
+        $("a.is-abbr-language")
+                .shouldHave(text(language.name()))
+                .click();
+        $("h1.heading__title").shouldHave(text(language.description));
     }
 
     static Stream<Arguments> patternSiteShouldBeCorrectButtonsTest() {
         return Stream.of(
                 Arguments.of(Language.RU,
-                        List.of("Информация", "Подключиться", "Специальные предложения", "Автобусы")
+                        List.of("О нас", "Визовые и консульско-правовые вопросы", "Германия и Россия", "Открыть поиск")
                 ),
-                Arguments.of(Language.EN,
-                        List.of("Information", "Login", "Special offers", "Buses")
-                ),
+
                 Arguments.of(Language.DE,
-                        List.of("Informationen", "Anmelden", "Sonderangebote", "Busse")
+                        List.of("Über uns", "Service", "Deutschland und Russland", "Suche öffnen")
                 )
         );
     }
@@ -47,10 +46,11 @@ public class ParametrizedTests extends TestBase {
     @Tag("WEB")
     @ParameterizedTest(name = "Проверка наличия кнопок {1} на соответствующем языке {0}")
     void patternSiteShouldBeCorrectButtonsTest(Language language, List<String> expectedButtons) {
-        open("/");
-        $(".language-dropdown").click();
-        $(".language-dropdown-item").$(byText(language.name())).click();
-        $$("div.header-menus").shouldHave(texts(expectedButtons));
+        open("/" + language.urlSuffix + "/ueber-uns/botschaft");
+        $("a.is-abbr-language")
+                .shouldHave(text(language.name()))
+                .click();
+        $$(".nav-primary__list-item").shouldHave(texts(expectedButtons));
 
     }
 
@@ -58,9 +58,11 @@ public class ParametrizedTests extends TestBase {
     @Tag("SMOKE")
     @ParameterizedTest(name = "Проверка заголовка {1} на соответствующем языке {0}")
     void checkTitleOnOtherLanguagesWithCSVFileTest(String language, String title) {
-        open("/");
-        $(".language-dropdown").click();
-        $(".language-dropdown-item").$(byText(language)).shouldBe(visible).click();
-        $(".search-form-title").shouldHave(text(title));
+        Language lang = Language.valueOf(language);
+        open("/" + lang.urlSuffix + "/ueber-uns/botschaft");
+        $("a.is-abbr-language")
+                .shouldHave(text(language))
+                .click();
+        $("h1.heading__title").shouldHave(text(title));
     }
 }

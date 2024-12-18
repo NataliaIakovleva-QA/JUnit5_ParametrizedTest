@@ -8,7 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 public class TestBase {
     @BeforeAll
     static void beforeAll() {
-        Configuration.baseUrl = "https://eurolines.lt";
+        Configuration.baseUrl = "https://germania.diplo.de";
         Configuration.browserSize = "1980x1080";
         Configuration.pageLoadStrategy = "eager";
     }
